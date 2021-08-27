@@ -8,7 +8,7 @@ use std::sync::Arc;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::Filter;
 
-const TT: &'static str = "ritide";
+const TT: &str = "ritide";
 
 lazy_static::lazy_static! {
     pub static ref CONFIG: Config = Config::load();
@@ -55,7 +55,7 @@ mod de_ser_date_format {
     use chrono::{DateTime, Local, TimeZone};
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M";
+    const FORMAT: &str = "%Y-%m-%d %H:%M";
 
     // The signature of a serialize_with function must follow the pattern:
     //
@@ -95,7 +95,7 @@ fn de_ser_float_format<'de, D: serde::Deserializer<'de>>(deserializer: D) -> Res
         serde_json::Value::String(s) => s.parse().map_err(serde::de::Error::custom)?,
         serde_json::Value::Number(num) => {
             num.as_f64()
-                .ok_or(serde::de::Error::custom("Invalid number"))? as f32
+                .ok_or_else(|| serde::de::Error::custom("Invalid number"))? as f32
         }
         _ => return Err(serde::de::Error::custom("wrong type")),
     })

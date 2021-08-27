@@ -1,0 +1,9 @@
+
+{% macro table_row(id, hash, icon_class, text) %}
+    <a id="{{id}}" href="{{hash}}" class="trow clicky nav-link highlighty" alt="{{text}}">
+        <div class="nav-content valign-wrapper">
+            <i class="material-icons nav-icon {{icon_class}}" alt="{{text}}"></i>
+            {{text}}
+        </div>
+    </a>
+{% endmacro table_row %}

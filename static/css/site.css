@@ -1,0 +1,60 @@
+
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    color: #292929;
+    font-size: 1.2rem;
+    font-weight: 300;
+    height: 100%;
+    width: 100%;
+    z-index: -100;
+}
+
+.head {
+    text-align: center;
+    font-size: 2rem;
+}
+
+.tiny {
+    font-size: 1rem;
+}
+
+.content {
+    min-height: 100%;
+    min-width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    bottom: 100%;
+    z-index: 1;
+    box-shadow: none;
+
+}
+
+#tides {
+  border-collapse: collapse;
+  width: 24rem;
+  margin: 0 auto;
+}
+
+#tides td, #tides th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tides tr:hover {background-color: #F1F8FE;}
+
+#tides th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #292929;
+  color: #ededed;
+}
+
+.myblue {
+    background-color: #80B6E1;
+}
+.mygrey {
+    background-color: #f2f2f2;
+}

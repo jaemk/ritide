@@ -245,7 +245,7 @@ async fn main() {
                     is_next: bool,
                 }
                 let mut formatted = vec![];
-                let mut index_of_closest = 0;
+                let mut index_of_next = 0;
 
                 let edt = chrono::FixedOffset::west(4 * 60 * 60);
                 let now_edt = chrono::Utc::now().with_timezone(&edt);
@@ -254,9 +254,7 @@ async fn main() {
                 for (i, t) in tides.predictions.iter().enumerate() {
                     if t.t.naive_local() > now_edt
                         && now_edt
-                            .signed_duration_since(
-                                tides.predictions[index_of_closest].t.naive_local(),
-                            )
+                            .signed_duration_since(tides.predictions[index_of_next].t.naive_local())
                             .num_seconds()
                             .abs()
                             > now_edt
@@ -264,7 +262,7 @@ async fn main() {
                                 .num_seconds()
                                 .abs()
                     {
-                        index_of_closest = i;
+                        index_of_next = i;
                     }
 
                     formatted.push(Formatted {
@@ -278,16 +276,30 @@ async fn main() {
                         is_next: false,
                     })
                 }
-                formatted[index_of_closest].is_next = true;
-                let movement = if formatted[index_of_closest].level == "High" {
+                formatted[index_of_next].is_next = true;
+                let movement = if formatted[index_of_next].level == "High" {
                     "is rising"
                 } else {
                     "is falling"
                 };
+                let dur_til_next = tides.predictions[index_of_next]
+                    .t
+                    .naive_local()
+                    .signed_duration_since(now_edt)
+                    .num_seconds();
+                let hours_til_next = dur_til_next / (60 * 60);
+                let minutes_til_next = (dur_til_next - (60 * 60 * hours_til_next)) / 60;
+                let time_til_next = format!("{}hr {}m", hours_til_next, minutes_til_next);
+
                 let mut ctx = tera::Context::new();
                 ctx.insert("tides", &formatted);
                 ctx.insert("movement", &movement);
                 ctx.insert("station", &STATION);
+                ctx.insert("time_til_next", &time_til_next);
+                ctx.insert(
+                    "next_tide_type",
+                    &formatted[index_of_next].level.to_lowercase(),
+                );
                 let s = te.render("home.html", &ctx).unwrap();
                 Ok(warp::reply::html(s))
             }

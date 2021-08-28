@@ -252,12 +252,6 @@ async fn main() {
                 let now_edt = now_edt.naive_local();
 
                 for (i, t) in tides.predictions.iter().enumerate() {
-                    println!(
-                        "{:?} {:?} {:?}",
-                        t.t.naive_local(),
-                        now_edt,
-                        t.t.naive_local() > now_edt
-                    );
                     if t.t.naive_local() > now_edt
                         && now_edt
                             .signed_duration_since(
@@ -272,7 +266,6 @@ async fn main() {
                     {
                         index_of_closest = i;
                     }
-                    println!("{:?}", index_of_closest);
 
                     formatted.push(Formatted {
                         time: t.t.format("%Y-%m-%d %H:%M").to_string(),

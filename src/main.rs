@@ -240,6 +240,7 @@ async fn main() {
                 #[derive(serde::Serialize)]
                 struct Formatted {
                     time: String,
+                    only_time: String,
                     level: String,
                     height: String,
                     is_next: bool,
@@ -266,7 +267,8 @@ async fn main() {
                     }
 
                     formatted.push(Formatted {
-                        time: t.t.format("%Y-%m-%d %H:%M").to_string(),
+                        time: t.t.format("%Y-%m-%d %l:%M%P").to_string(),
+                        only_time: t.t.format("%l:%M%P").to_string(),
                         level: match t.ty {
                             Type::H => "High",
                             Type::L => "Low",
@@ -300,6 +302,9 @@ async fn main() {
                     "next_tide_type",
                     &formatted[index_of_next].level.to_lowercase(),
                 );
+                ctx.insert("next_tide", &formatted[index_of_next]);
+                ctx.insert("current_tide", &formatted[index_of_next - 1]);
+                ctx.insert("now", &now_edt.format("%l:%M%P").to_string());
                 let s = te.render("home.html", &ctx).unwrap();
                 Ok(warp::reply::html(s))
             }

@@ -6,9 +6,9 @@
 
 <div class="content my-flow-text">
   <h2 class="head">
-    Tide<spend class="tiny">{{ movement }}</span><br/>
-    <span class="tiny"><a class="center" href="https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id={{ station }}">noaa</a></span><br/>
-    <span class="tiny">{{ time_til_next }} until {{ next_tide_type }} tide</span>
+    <span class="tiny"><b>{{ current_tide.level }}</b> {{ current_tide.only_time }} ~ {{ now }} ~ {{ next_tide.only_time }} <b>{{ next_tide.level }}</b></span><br/>
+    <span class="tiny">{{ time_til_next }} until {{ next_tide_type }} tide</span><br/>
+    <span class="tiny"><a class="center" href="https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id={{ station }}">noaa</a></span>
   </h2>
   <table id="tides">
     <tr>

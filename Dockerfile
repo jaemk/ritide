@@ -1,4 +1,4 @@
-FROM rust:1.53
+FROM rust:1.58.1-bullseye as builder
 
 # create a new empty shell
 RUN mkdir -p /app
@@ -28,10 +28,14 @@ RUN cargo build --release
 COPY ./.git ./.git
 # make sure there's no trailing newline
 RUN git rev-parse HEAD | awk '{ printf "%s", substr($0, 0, 7)>"commit_hash.txt" }'
-RUN rm -rf ./.git
 
-# copy out the binary and delete the build artifacts
-RUN cp ./target/release/ritide ./ritide
-RUN rm -rf ./target
+FROM debian:bullseye-slim
+WORKDIR /app/didpoop
+
+RUN apt-get update && apt-get install --yes ca-certificates
+COPY --from=builder /app/ritide/commit_hash.txt ./commit_hash.txt
+COPY --from=builder /app/ritide/static ./static
+COPY --from=builder /app/ritide/templates ./templates
+COPY --from=builder /app/ritide/target/release/ritide ./ritide
 
 CMD ["./ritide"]
